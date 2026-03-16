@@ -165,62 +165,72 @@ struct SettingsView: View {
 
     // MARK: - 目標設定セクション
 
-    /// 日次目標時間をスライダーで設定する
+    /// 目標時間ピッカーの展開状態
+    @State private var isGoalPickerExpanded = false
+
+    /// 日次目標時間をピッカーで設定する
     private var goalSettingsSection: some View {
         Section {
-            VStack(alignment: .leading, spacing: 8) {
-                Text("1日の目標")
-                    .font(.body)
-
-                // カスタムステッパー: 0〜60分は5分刻み、60分〜480分は15分刻み
-                // 方法A（カスタムステッパーUI）を採用。
-                // 理由: 設定画面のList内に自然に収まり、現在値が明確に見え、
-                // Pickerより操作が直感的なため。
-                HStack {
-                    Button {
-                        let current = Int(viewModel.targetMinutes)
-                        let step = current > 60 ? 15 : 5
-                        let newValue = max(0, current - step)
-                        viewModel.targetMinutes = Double(newValue)
-                        if let goal = currentGoal {
-                            viewModel.updateTargetMinutes(goal)
-                        }
-                    } label: {
-                        Image(systemName: "minus.circle.fill")
-                            .font(.title2)
-                            .foregroundStyle(Color("AccentColor"))
-                    }
-                    .buttonStyle(.borderless)
-                    .disabled(viewModel.targetMinutes <= 0)
-
-                    Spacer()
-
-                    Text(viewModel.formattedTarget)
-                        .font(.title3)
-                        .fontWeight(.bold)
-                        .monospacedDigit()
-
-                    Spacer()
-
-                    Button {
-                        let current = Int(viewModel.targetMinutes)
-                        let step = current >= 60 ? 15 : 5
-                        let newValue = min(480, current + step)
-                        viewModel.targetMinutes = Double(newValue)
-                        if let goal = currentGoal {
-                            viewModel.updateTargetMinutes(goal)
-                        }
-                    } label: {
-                        Image(systemName: "plus.circle.fill")
-                            .font(.title2)
-                            .foregroundStyle(Color("AccentColor"))
-                    }
-                    .buttonStyle(.borderless)
-                    .disabled(viewModel.targetMinutes >= 480)
+            // タップで展開するラベル行
+            Button {
+                withAnimation {
+                    isGoalPickerExpanded.toggle()
                 }
-                .padding(.vertical, 4)
+            } label: {
+                HStack {
+                    Text("1日の目標")
+                        .foregroundStyle(.primary)
+                    Spacer()
+                    Text(viewModel.formattedTarget)
+                        .foregroundStyle(isGoalPickerExpanded ? Color("AccentColor") : .secondary)
+                }
             }
-            .padding(.vertical, 4)
+
+            // 展開時にホイールピッカーを表示
+            if isGoalPickerExpanded {
+                HStack(spacing: 0) {
+                    // 時間ピッカー
+                    Picker("時間", selection: Binding(
+                        get: { viewModel.targetHours },
+                        set: { newValue in
+                            viewModel.targetHours = newValue
+                            if let goal = currentGoal {
+                                viewModel.updateTargetMinutes(goal)
+                            }
+                        }
+                    )) {
+                        ForEach(0...8, id: \.self) { h in
+                            Text("\(h)").tag(h)
+                        }
+                    }
+                    .pickerStyle(.wheel)
+                    .frame(maxWidth: .infinity)
+
+                    Text("時間")
+                        .font(.body)
+
+                    // 分ピッカー（5分刻み）
+                    Picker("分", selection: Binding(
+                        get: { viewModel.targetMins },
+                        set: { newValue in
+                            viewModel.targetMins = newValue
+                            if let goal = currentGoal {
+                                viewModel.updateTargetMinutes(goal)
+                            }
+                        }
+                    )) {
+                        ForEach(Array(stride(from: 0, through: 55, by: 5)), id: \.self) { m in
+                            Text("\(m)").tag(m)
+                        }
+                    }
+                    .pickerStyle(.wheel)
+                    .frame(maxWidth: .infinity)
+
+                    Text("分")
+                        .font(.body)
+                }
+                .frame(height: 150)
+            }
         } header: {
             Text("目標設定")
         } footer: {

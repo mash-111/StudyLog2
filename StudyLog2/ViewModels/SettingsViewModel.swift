@@ -28,8 +28,20 @@ final class SettingsViewModel {
 
     // MARK: - 目標設定
 
-    /// 日次目標の分数（スライダー値）
+    /// 日次目標の分数
     var targetMinutes: Double = 60
+
+    /// 目標時間の「時間」部分（0〜8）
+    var targetHours: Int {
+        get { Int(targetMinutes) / 60 }
+        set { targetMinutes = Double(newValue * 60 + targetMins) }
+    }
+
+    /// 目標時間の「分」部分（0〜55、5分刻み）
+    var targetMins: Int {
+        get { Int(targetMinutes) % 60 }
+        set { targetMinutes = Double(targetHours * 60 + newValue) }
+    }
 
     // MARK: - 通知設定
 
