@@ -1,5 +1,6 @@
 import SwiftUI
 import SwiftData
+import Combine
 
 /// 設定画面
 /// 科目管理・目標設定・通知設定・アプリ情報を表示する。
@@ -76,6 +77,25 @@ struct SettingsView: View {
                     if viewModel.notificationAuthStatus != .authorized {
                         viewModel.notificationEnabled = false
                     }
+                }
+            }
+            // 設定アプリから戻った際の通知許可状態の再同期
+            // .onAppear はバックグラウンド→フォアグラウンド復帰時に発火しないケースがあるため、
+            // didBecomeActiveNotification を監視してアプリ復帰のたびに許可状態を再チェックする。
+            // 動作の流れ:
+            // 1. ユーザーが設定アプリで通知を許可する
+            // 2. アプリに戻ると didBecomeActiveNotification が発火
+            // 3. checkNotificationStatus() で最新の許可状態を取得
+            // 4. .authorized ならトグルをONに同期、.denied ならOFFに同期
+            .onReceive(
+                NotificationCenter.default.publisher(
+                    for: UIApplication.didBecomeActiveNotification
+                )
+            ) { _ in
+                Task {
+                    await viewModel.checkNotificationStatus()
+                    viewModel.notificationEnabled = viewModel.notificationAuthStatus == .authorized
+                        && (currentGoal?.notificationEnabled ?? false)
                 }
             }
             .onDisappear {
