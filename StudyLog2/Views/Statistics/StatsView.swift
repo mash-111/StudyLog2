@@ -156,11 +156,11 @@ struct StatsView: View {
                         AxisGridLine()
                     }
                 case .day:
-                    // 日表示: 時間単位で表示
-                    AxisMarks(values: .stride(by: .hour)) { value in
+                    // 日表示: 日付を月/日形式で表示
+                    AxisMarks(values: .stride(by: .day)) { value in
                         if let date = value.as(Date.self) {
                             AxisValueLabel {
-                                Text(date, format: .dateTime.hour())
+                                Text(date, format: .dateTime.month(.defaultDigits).day())
                                     .font(.caption2)
                             }
                         }
@@ -193,17 +193,18 @@ struct StatsView: View {
                 value: viewModel.totalTimeFormatted
             )
 
-            // 「平均/日」アイコン候補:
-            // 1. "chart.line.flattrend.xyaxis" — 平均推移のイメージだが名前が長く直感的でない
-            // 2. "number.circle.fill" — 数値・平均値を連想しやすい
-            // 3. "chart.bar.xaxis" — グラフの平均的な表示を連想
-            // → "number.circle.fill" を採用: 「平均値＝数値」のイメージが最も直感的で、
-            //   divide.circle.fill（÷）より意味が伝わりやすい
+            // 「平均/日」アイコン: 時計 ÷ カレンダー で「合計時間÷日数」を視覚的に表現
             StatsSummaryCard(
-                icon: "number.circle.fill",
                 title: "平均/日",
                 value: viewModel.averageTimeFormatted
-            )
+            ) {
+                HStack(spacing: 2) {
+                    Image(systemName: "clock.fill")
+                    Text("/")
+                        .fontWeight(.bold)
+                    Image(systemName: "calendar")
+                }
+            }
 
             StatsSummaryCard(
                 icon: "number.circle.fill",

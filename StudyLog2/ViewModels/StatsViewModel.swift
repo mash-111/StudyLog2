@@ -158,7 +158,9 @@ final class StatsViewModel {
 
         switch period {
         case .day:
-            return (todayStart, tomorrow)
+            // 今日を含む過去7日間（日別表示）
+            let weekAgo = calendar.date(byAdding: .day, value: -6, to: todayStart)!
+            return (weekAgo, tomorrow)
         case .week:
             // 今日を含む過去7日間
             let weekAgo = calendar.date(byAdding: .day, value: -6, to: todayStart)!
@@ -173,7 +175,7 @@ final class StatsViewModel {
     /// 選択期間の日数
     private var daysInPeriod: Int {
         switch selectedPeriod {
-        case .day: return 1
+        case .day: return 7
         case .week: return 7
         case .month: return 30
         }
