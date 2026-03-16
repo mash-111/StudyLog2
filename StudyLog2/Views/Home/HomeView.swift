@@ -27,6 +27,8 @@ struct HomeView: View {
     @State private var buttonScale: CGFloat = 1.0
     /// 前回の目標達成率（目標達成検知用）
     @State private var previousGoalProgress: Int = 0
+    /// 計測中に科目変更しようとした時のアラート表示フラグ
+    @State private var showRunningAlert: Bool = false
 
     // MARK: - 初期化
 
@@ -38,6 +40,13 @@ struct HomeView: View {
             session.startTime >= startOfDay
         }
         _todaySessions = Query(filter: predicate, sort: \StudySession.startTime, order: .reverse)
+    }
+
+    /// プレビュー用イニシャライザ
+    /// 指定したTimerViewModelの状態でホーム画面を表示する
+    init(timerVM: TimerViewModel) {
+        self.init()
+        _timerVM = State(initialValue: timerVM)
     }
 
     // MARK: - 計算プロパティ
@@ -93,6 +102,7 @@ struct HomeView: View {
                         emptySubjectsView
                     } else {
                         // 科目選択セクション
+                        // 計測中はピッカーを無効化し、タップ時にアラートを表示する
                         VStack(spacing: 4) {
                             SubjectPickerView(
                                 subjects: subjects,
@@ -109,6 +119,17 @@ struct HomeView: View {
                                     .font(.caption)
                                     .foregroundStyle(.secondary)
                             }
+                        }
+                        // 計測中に科目選択エリアをタップした場合にアラートを表示
+                        .onTapGesture {
+                            if timerVM.isRunning {
+                                showRunningAlert = true
+                            }
+                        }
+                        .alert("計測中", isPresented: $showRunningAlert) {
+                            Button("OK") {}
+                        } message: {
+                            Text("計測中は科目を変更できません")
                         }
 
                         // タイマーセクション
@@ -449,6 +470,16 @@ private struct ScaleButtonStyle: ButtonStyle {
 
 #Preview("ホーム画面") {
     HomeView()
+        .modelContainer(try! previewContainer())
+        .tint(Color("AccentColor"))
+}
+
+/// 計測中状態のプレビュー
+/// previewRunningで計測中のTimerViewModelを注入し、科目ピッカーが無効化された状態を確認できる
+#Preview("計測中") {
+    let sampleSubject = Subject(name: "数学", color: "#4A90D9", icon: "function", weeklyGoalMinutes: 300)
+    let runningVM = TimerViewModel.previewRunning(subject: sampleSubject)
+    HomeView(timerVM: runningVM)
         .modelContainer(try! previewContainer())
         .tint(Color("AccentColor"))
 }

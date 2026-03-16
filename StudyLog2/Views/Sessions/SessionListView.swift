@@ -12,6 +12,13 @@ struct SessionListView: View {
     /// 全セッションを新しい順に取得
     @Query(sort: \StudySession.startTime, order: .reverse) private var sessions: [StudySession]
 
+    // スワイプ削除ボタンのリセット対策
+    // 方法3を採用: List に .id() を付与し、タブ切り替え時（onDisappear）に
+    // IDを再生成して強制リフレッシュする。
+    // 理由: onChange(of: selectedTab) は親Viewの selectedTab を参照する必要があり
+    // コンポーネントの独立性が下がる。.onDisappear + id 再生成が最もSwiftUIらしい。
+    @State private var listId = UUID()
+
     // MARK: - ビュー本体
 
     var body: some View {
@@ -38,9 +45,13 @@ struct SessionListView: View {
                         }
                     }
                     .listStyle(.insetGrouped)
+                    .id(listId)
                 }
             }
             .navigationTitle("記録一覧")
+            .onDisappear {
+                listId = UUID()
+            }
         }
     }
 
