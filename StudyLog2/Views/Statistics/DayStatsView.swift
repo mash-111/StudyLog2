@@ -147,6 +147,9 @@ struct DayStatsView: View {
                     .foregroundStyle(.secondary)
             }
         }
+        .padding()
+        .background(Color(.systemGray6))
+        .clipShape(RoundedRectangle(cornerRadius: 12))
     }
 
     // MARK: - サマリーカードセクション

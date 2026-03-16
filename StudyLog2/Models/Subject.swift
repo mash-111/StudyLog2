@@ -14,6 +14,8 @@ final class Subject {
     var icon: String
     /// 週間目標（分単位）
     var weeklyGoalMinutes: Int
+    /// 作成日時（表示順のソートに使用）
+    var createdAt: Date
 
     /// この科目に紐づく学習記録（カスケード削除）
     @Relationship(deleteRule: .cascade, inverse: \StudySession.subject)
@@ -24,12 +26,14 @@ final class Subject {
         name: String,
         color: String,
         icon: String,
-        weeklyGoalMinutes: Int = 0
+        weeklyGoalMinutes: Int = 0,
+        createdAt: Date = Date()
     ) {
         self.id = id
         self.name = name
         self.color = color
         self.icon = icon
         self.weeklyGoalMinutes = weeklyGoalMinutes
+        self.createdAt = createdAt
     }
 }

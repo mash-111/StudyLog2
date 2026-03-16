@@ -20,12 +20,37 @@ struct WeekStatsView: View {
     // MARK: - 外部からの入力
     let sessions: [StudySession]
     let subjects: [Subject]
+    let dailyGoals: [DailyGoal]
 
     // MARK: - ViewModel
     @State private var viewModel = StatsViewModel()
 
     // MARK: - カレンダー
     private let calendar = Calendar.current
+
+    /// 目標時間（分）
+    private var goalMinutes: Int {
+        dailyGoals.first?.targetMinutes ?? 0
+    }
+
+    /// 指定日の全科目合計学習時間（分）
+    private func dailyTotal(for date: Date) -> Double {
+        let dayStart = calendar.startOfDay(for: date)
+        let dayEnd = calendar.date(byAdding: .day, value: 1, to: dayStart)!
+        return sessions
+            .filter { $0.startTime >= dayStart && $0.startTime < dayEnd }
+            .reduce(0.0) { $0 + $1.durationMinutes }
+    }
+
+    /// 達成マーク表示用: 過去7日間の日付と合計学習時間
+    private var dailyTotals: [(date: Date, total: Double)] {
+        let today = calendar.startOfDay(for: Date())
+        let startDate = calendar.date(byAdding: .day, value: -6, to: today)!
+        return (0..<7).map { dayOffset in
+            let date = calendar.date(byAdding: .day, value: dayOffset, to: startDate)!
+            return (date: date, total: dailyTotal(for: date))
+        }
+    }
 
     // MARK: - 積み上げ棒グラフ用データ
     /// 過去7日間×各科目の学習時間を算出
@@ -115,6 +140,34 @@ struct WeekStatsView: View {
                     )
                     .foregroundStyle(by: .value("科目", item.subjectName))
                 }
+
+                // 目標ライン（目標が設定されている場合のみ）
+                if goalMinutes > 0 {
+                    RuleMark(y: .value("目標", goalMinutes))
+                        .foregroundStyle(.orange.opacity(0.7))
+                        .lineStyle(StrokeStyle(lineWidth: 1.5, dash: [6, 3]))
+                        .annotation(position: .top, alignment: .trailing) {
+                            Text("目標 \(goalMinutes)分")
+                                .font(.caption2)
+                                .foregroundStyle(.orange)
+                        }
+
+                    // 達成マーク
+                    ForEach(Array(dailyTotals.enumerated()), id: \.offset) { _, entry in
+                        if entry.total >= Double(goalMinutes) {
+                            PointMark(
+                                x: .value("日付", entry.date, unit: .day),
+                                y: .value("時間", entry.total)
+                            )
+                            .symbolSize(0) // 点自体は非表示
+                            .annotation(position: .top) {
+                                Image(systemName: "checkmark.circle.fill")
+                                    .foregroundStyle(.green)
+                                    .font(.caption)
+                            }
+                        }
+                    }
+                }
             }
             .chartForegroundStyleScale(
                 domain: subjectDomain,
@@ -145,7 +198,7 @@ struct WeekStatsView: View {
         }
         .padding()
         .background(Color(.systemGray6))
-        .clipShape(RoundedRectangle(cornerRadius: 16))
+        .clipShape(RoundedRectangle(cornerRadius: 12))
     }
 
     // MARK: - サマリーカード
@@ -228,7 +281,7 @@ struct WeekStatsView: View {
         }
         .padding()
         .background(Color(.systemGray6))
-        .clipShape(RoundedRectangle(cornerRadius: 16))
+        .clipShape(RoundedRectangle(cornerRadius: 12))
     }
 
     // MARK: - ドーナツグラフ凡例
@@ -320,7 +373,11 @@ private func weekPreviewData() -> (sessions: [StudySession], subjects: [Subject]
     let data = weekPreviewData()
 
     ScrollView {
-        WeekStatsView(sessions: data.sessions, subjects: data.subjects)
-            .padding()
+        WeekStatsView(
+            sessions: data.sessions,
+            subjects: data.subjects,
+            dailyGoals: [DailyGoal(targetMinutes: 150)]
+        )
+        .padding()
     }
 }

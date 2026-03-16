@@ -172,13 +172,18 @@ final class StatsViewModel {
         }
     }
 
-    /// 選択期間の日数
+    /// 選択期間内の実際の学習日数（セッションがある日のみカウント）
     private var daysInPeriod: Int {
-        switch selectedPeriod {
-        case .day: return 7
-        case .week: return 7
-        case .month: return 30
-        }
+        let (startDate, endDate) = dateRange(for: selectedPeriod)
+        // バグ修正: ハードコードの日数（7/30）だと、学習日が少ない場合に
+        // 平均が1分未満になりInt変換で0分と表示されていた。
+        // 実際にセッションが存在するユニーク日数で割ることで正確な平均を算出する。
+        let studyDays = Set(
+            sessions
+                .filter { $0.startTime >= startDate && $0.startTime < endDate }
+                .map { calendar.startOfDay(for: $0.startTime) }
+        )
+        return max(studyDays.count, 1)
     }
 
     /// 分数を「X時間Y分」形式にフォーマット

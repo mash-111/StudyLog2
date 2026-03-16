@@ -14,7 +14,7 @@ struct SettingsView: View {
     @State private var showDeniedAlert = false
 
     /// SwiftDataから科目一覧を取得
-    @Query(sort: \Subject.name) private var subjects: [Subject]
+    @Query(sort: \Subject.createdAt) private var subjects: [Subject]
     /// SwiftDataから日次目標を取得（最初の1件を使用）
     @Query private var dailyGoals: [DailyGoal]
 
@@ -169,29 +169,56 @@ struct SettingsView: View {
     private var goalSettingsSection: some View {
         Section {
             VStack(alignment: .leading, spacing: 8) {
-                HStack {
-                    Text("1日の目標")
-                        .font(.body)
-                    Spacer()
-                    Text(viewModel.formattedTarget)
-                        .font(.body)
-                        .fontWeight(.semibold)
-                        .foregroundStyle(Color("AccentColor"))
-                }
+                Text("1日の目標")
+                    .font(.body)
 
-                // 0〜480分（8時間）のスライダー、15分刻み
-                Slider(
-                    value: $viewModel.targetMinutes,
-                    in: 0...480,
-                    step: 15
-                )
-                .tint(Color("AccentColor"))
-                .onChange(of: viewModel.targetMinutes) {
-                    // DailyGoalに反映
-                    if let goal = currentGoal {
-                        viewModel.updateTargetMinutes(goal)
+                // カスタムステッパー: 0〜60分は5分刻み、60分〜480分は15分刻み
+                // 方法A（カスタムステッパーUI）を採用。
+                // 理由: 設定画面のList内に自然に収まり、現在値が明確に見え、
+                // Pickerより操作が直感的なため。
+                HStack {
+                    Button {
+                        let current = Int(viewModel.targetMinutes)
+                        let step = current > 60 ? 15 : 5
+                        let newValue = max(0, current - step)
+                        viewModel.targetMinutes = Double(newValue)
+                        if let goal = currentGoal {
+                            viewModel.updateTargetMinutes(goal)
+                        }
+                    } label: {
+                        Image(systemName: "minus.circle.fill")
+                            .font(.title2)
+                            .foregroundStyle(Color("AccentColor"))
                     }
+                    .buttonStyle(.borderless)
+                    .disabled(viewModel.targetMinutes <= 0)
+
+                    Spacer()
+
+                    Text(viewModel.formattedTarget)
+                        .font(.title3)
+                        .fontWeight(.bold)
+                        .monospacedDigit()
+
+                    Spacer()
+
+                    Button {
+                        let current = Int(viewModel.targetMinutes)
+                        let step = current >= 60 ? 15 : 5
+                        let newValue = min(480, current + step)
+                        viewModel.targetMinutes = Double(newValue)
+                        if let goal = currentGoal {
+                            viewModel.updateTargetMinutes(goal)
+                        }
+                    } label: {
+                        Image(systemName: "plus.circle.fill")
+                            .font(.title2)
+                            .foregroundStyle(Color("AccentColor"))
+                    }
+                    .buttonStyle(.borderless)
+                    .disabled(viewModel.targetMinutes >= 480)
                 }
+                .padding(.vertical, 4)
             }
             .padding(.vertical, 4)
         } header: {
