@@ -11,6 +11,7 @@ struct StatsView: View {
     // MARK: - データ取得
     @Query private var sessions: [StudySession]
     @Query private var subjects: [Subject]
+    @Query private var dailyGoals: [DailyGoal]
 
     // MARK: - ViewModel
     @State private var viewModel = StatsViewModel()
@@ -103,13 +104,31 @@ struct StatsView: View {
                 .font(.headline)
                 .padding(.horizontal)
 
-            Chart(viewModel.barChartData) { item in
-                BarMark(
-                    x: .value("日付", item.date, unit: .day),
-                    y: .value("時間（分）", item.minutes)
-                )
-                .foregroundStyle(Color("AccentColor").gradient)
-                .cornerRadius(4)
+            Chart {
+                ForEach(viewModel.barChartData) { item in
+                    BarMark(
+                        x: .value("日付", item.date, unit: .day),
+                        y: .value("時間（分）", item.minutes)
+                    )
+                    .foregroundStyle(Color("AccentColor").gradient)
+                    .cornerRadius(4)
+                }
+
+                // 目標ライン: DailyGoalのtargetMinutesを破線で表示
+                // 目標未設定（0分）の場合は非表示
+                // 週・月タブには表示しない（日タブのみ）
+                if viewModel.selectedPeriod == .day,
+                   let goal = dailyGoals.first,
+                   goal.targetMinutes > 0 {
+                    RuleMark(y: .value("目標", goal.targetMinutes))
+                        .foregroundStyle(.orange.opacity(0.7))
+                        .lineStyle(StrokeStyle(lineWidth: 1.5, dash: [6, 3]))
+                        .annotation(position: .top, alignment: .trailing) {
+                            Text("目標 \(goal.targetMinutes)分")
+                                .font(.caption2)
+                                .foregroundStyle(.orange)
+                        }
+                }
             }
             .chartXAxis {
                 // 期間に応じたX軸ラベルの出し分け
@@ -174,8 +193,14 @@ struct StatsView: View {
                 value: viewModel.totalTimeFormatted
             )
 
+            // 「平均/日」アイコン候補:
+            // 1. "chart.line.flattrend.xyaxis" — 平均推移のイメージだが名前が長く直感的でない
+            // 2. "number.circle.fill" — 数値・平均値を連想しやすい
+            // 3. "chart.bar.xaxis" — グラフの平均的な表示を連想
+            // → "number.circle.fill" を採用: 「平均値＝数値」のイメージが最も直感的で、
+            //   divide.circle.fill（÷）より意味が伝わりやすい
             StatsSummaryCard(
-                icon: "divide.circle.fill",
+                icon: "number.circle.fill",
                 title: "平均/日",
                 value: viewModel.averageTimeFormatted
             )
@@ -275,10 +300,65 @@ struct StatsView: View {
         }
         .padding(.horizontal)
     }
+
+    // MARK: - 曜日フォーマッター
+    // 週表示のX軸ラベル用（日本語の曜日略称: 月, 火, 水…）
+    private static let weekdayFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "ja_JP")
+        formatter.dateFormat = "E"
+        return formatter
+    }()
 }
 
 // MARK: - プレビュー
 #Preview("統計画面") {
     StatsView()
         .modelContainer(try! previewContainer())
+}
+
+// MARK: - 30日データプレビュー
+#Preview("統計画面（30日データ）") {
+    let config = ModelConfiguration(isStoredInMemoryOnly: true)
+    let container = try! ModelContainer(
+        for: StudySession.self, Subject.self, DailyGoal.self,
+        configurations: config
+    )
+    let context = container.mainContext
+
+    // 科目を作成
+    let subjectMath = Subject(name: "数学", color: "#FF6B6B", icon: "function")
+    let subjectEnglish = Subject(name: "英語", color: "#4ECDC4", icon: "book")
+    let subjectScience = Subject(name: "理科", color: "#45B7D1", icon: "flask")
+    context.insert(subjectMath)
+    context.insert(subjectEnglish)
+    context.insert(subjectScience)
+
+    // 30日分のセッションデータを生成
+    let calendar = Calendar.current
+    let today = calendar.startOfDay(for: Date())
+    let subjects = [subjectMath, subjectEnglish, subjectScience]
+
+    for dayOffset in 0..<30 {
+        let baseDate = calendar.date(byAdding: .day, value: -dayOffset, to: today)!
+        // 1日あたり1〜2セッションをランダムに生成
+        let sessionCount = (dayOffset % 3 == 0) ? 2 : 1
+        for sessionIndex in 0..<sessionCount {
+            let subject = subjects[(dayOffset + sessionIndex) % subjects.count]
+            let hour = 9 + sessionIndex * 3
+            let startTime = calendar.date(bySettingHour: hour, minute: 0, second: 0, of: baseDate)!
+            let durationSeconds = (30 + (dayOffset * 7 + sessionIndex * 13) % 90) * 60
+            let endTime = startTime.addingTimeInterval(Double(durationSeconds))
+            let session = StudySession(
+                subject: subject,
+                startTime: startTime,
+                endTime: endTime,
+                durationSeconds: durationSeconds
+            )
+            context.insert(session)
+        }
+    }
+
+    return StatsView()
+        .modelContainer(container)
 }

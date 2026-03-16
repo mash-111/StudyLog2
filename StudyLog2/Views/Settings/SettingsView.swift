@@ -9,10 +9,20 @@ struct SettingsView: View {
     @State private var viewModel = SettingsViewModel()
     @Environment(\.modelContext) private var modelContext
 
+    /// 通知が拒否されている場合に設定アプリへ誘導するアラートの表示状態
+    @State private var showDeniedAlert = false
+
     /// SwiftDataから科目一覧を取得
     @Query(sort: \Subject.name) private var subjects: [Subject]
     /// SwiftDataから日次目標を取得（最初の1件を使用）
     @Query private var dailyGoals: [DailyGoal]
+
+    // スワイプ削除ボタンのリセット対策
+    // 方法3を採用: List に .id() を付与し、タブ切り替え時（onDisappear）に
+    // IDを再生成して強制リフレッシュする。
+    // 理由: onChange(of: selectedTab) は親Viewの selectedTab を参照する必要があり
+    // コンポーネントの独立性が下がる。.onDisappear + id 再生成が最もSwiftUIらしい。
+    @State private var listId = UUID()
 
     /// 現在の日次目標（なければデフォルト値で作成）
     private var currentGoal: DailyGoal? {
@@ -28,6 +38,7 @@ struct SettingsView: View {
                 notificationSettingsSection
                 aboutSection
             }
+            .id(listId)
             .navigationTitle("設定")
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
@@ -38,6 +49,17 @@ struct SettingsView: View {
             .sheet(isPresented: $viewModel.showAddSubjectSheet) {
                 SubjectEditView(viewModel: viewModel)
             }
+            // 通知が拒否されている場合に設定アプリへの誘導アラート
+            .alert("通知が許可されていません", isPresented: $showDeniedAlert) {
+                Button("設定を開く") {
+                    if let url = URL(string: UIApplication.openSettingsURLString) {
+                        UIApplication.shared.open(url)
+                    }
+                }
+                Button("キャンセル", role: .cancel) {}
+            } message: {
+                Text("設定アプリ → StudyLog2 → 通知 からONにしてください")
+            }
             .onAppear {
                 // DailyGoalがなければ作成
                 if dailyGoals.isEmpty {
@@ -46,6 +68,18 @@ struct SettingsView: View {
                 }
                 // ViewModelにDailyGoalの値を反映
                 viewModel.loadGoal(currentGoal)
+
+                // 通知許可状態を確認し、トグルを実際の状態に同期
+                Task {
+                    await viewModel.checkNotificationStatus()
+                    // .authorized でなければトグルをOFFに同期
+                    if viewModel.notificationAuthStatus != .authorized {
+                        viewModel.notificationEnabled = false
+                    }
+                }
+            }
+            .onDisappear {
+                listId = UUID()
             }
         }
     }
@@ -169,13 +203,27 @@ struct SettingsView: View {
             .tint(Color("AccentColor"))
             .onChange(of: viewModel.notificationEnabled) { _, newValue in
                 if newValue {
-                    // 通知ON時に許可をリクエスト
-                    Task {
-                        await viewModel.requestNotificationPermission()
-                        // 許可後に通知設定を更新
+                    // 通知ON時：許可状態に応じて処理を分岐
+                    switch viewModel.notificationAuthStatus {
+                    case .denied:
+                        // 拒否済み：アラートを表示してトグルを戻す
+                        viewModel.notificationEnabled = false
+                        showDeniedAlert = true
+                    case .notDetermined:
+                        // 未決定：通常の許可リクエスト
+                        Task {
+                            await viewModel.requestNotificationPermission()
+                            if let goal = currentGoal {
+                                viewModel.updateNotificationSettings(goal)
+                            }
+                        }
+                    case .authorized, .provisional, .ephemeral:
+                        // 許可済み：通知設定を更新
                         if let goal = currentGoal {
                             viewModel.updateNotificationSettings(goal)
                         }
+                    @unknown default:
+                        break
                     }
                 } else {
                     // 通知OFF時にキャンセル

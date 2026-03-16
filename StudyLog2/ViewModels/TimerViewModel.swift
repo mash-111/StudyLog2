@@ -165,6 +165,19 @@ final class TimerViewModel {
         }
     }
 
+    // MARK: - プレビュー用ヘルパー
+
+    /// プレビュー用に計測中状態のViewModelを生成する
+    /// - Parameter subject: 選択する科目
+    /// - Returns: isRunning=trueの状態のTimerViewModel
+    static func previewRunning(subject: Subject) -> TimerViewModel {
+        let vm = TimerViewModel()
+        vm.selectedSubject = subject
+        vm.isRunning = true
+        vm.elapsedSeconds = 125  // 2分5秒経過のサンプル表示
+        return vm
+    }
+
     // MARK: - プライベートヘルパー
 
     /// 1秒ごとに経過秒数をインクリメントするタイマーを開始

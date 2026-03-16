@@ -40,6 +40,9 @@ final class SettingsViewModel {
         from: DateComponents(hour: 21, minute: 0)
     ) ?? Date()
 
+    /// 通知許可状態（システムの認可ステータスを保持）
+    var notificationAuthStatus: UNAuthorizationStatus = .notDetermined
+
     // MARK: - 通知マネージャー参照
     private let notificationManager = NotificationManager.shared
 
@@ -174,10 +177,20 @@ final class SettingsViewModel {
 
     // MARK: - 通知設定
 
+    /// 通知許可状態の確認
+    /// システムの通知設定を取得し、notificationAuthStatusを更新する
+    @MainActor
+    func checkNotificationStatus() async {
+        let settings = await UNUserNotificationCenter.current().notificationSettings()
+        self.notificationAuthStatus = settings.authorizationStatus
+    }
+
     /// 通知許可をリクエストし、トグルの状態を更新する
     @MainActor
     func requestNotificationPermission() async {
         let granted = await notificationManager.requestPermission()
+        // リクエスト後に許可状態を再取得
+        await checkNotificationStatus()
         if !granted {
             // 許可が得られなかった場合はトグルをオフに戻す
             notificationEnabled = false
