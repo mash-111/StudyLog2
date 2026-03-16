@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0D75C41FC77CA7F60461EE68 /* DayStatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C9806132878CACB8D74C87F /* DayStatsView.swift */; };
 		12F4A1377795864815E44A0C /* SubjectPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFD4FA709A0707FFA99F0A50 /* SubjectPickerView.swift */; };
 		209BD261C95096DE75B71418 /* StatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B8ECDC6DF4E72F09E4CD34E /* StatsView.swift */; };
 		22C6DB62C08C2EC24F18EFD4 /* HomeSketch.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3439A225BD83424D9035FD9 /* HomeSketch.swift */; };
@@ -19,6 +20,8 @@
 		72139A0966C55C203271506A /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AEBC78C3C4E5D7E9D47AED7 /* SettingsView.swift */; };
 		76D95D3BB8F6884A4E5C2E86 /* StatsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6188B1D385DBC8B7CD0BDE71 /* StatsViewModel.swift */; };
 		7BCFCB98BDA247AD45359F10 /* TimerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0FEADD9C1F37A43B09C928A /* TimerViewModel.swift */; };
+		8DC2202E2C25AD17D5CFF049 /* SessionListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CF98E6035EAD48D51E8FCAA /* SessionListView.swift */; };
+		9356DA7C94721D154E87D76D /* MonthStatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A487EC21D4F813C3709D6F2C /* MonthStatsView.swift */; };
 		A567441F5FE3BBACA7660133 /* SettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2874D1ED6977CA20D69237B3 /* SettingsViewModel.swift */; };
 		AD61D9D97452369688BED962 /* Subject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85F8E36B49925D8ACE03459A /* Subject.swift */; };
 		BA2BBC6440F5122484B3ECB4 /* StatisticsSketch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4531B0F21B12D45BA1E2F5E7 /* StatisticsSketch.swift */; };
@@ -29,19 +32,22 @@
 		DBD0E990705D897EE1761405 /* StatsSummaryCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADF02DB37B40DAD3D51FE1E0 /* StatsSummaryCard.swift */; };
 		DE95CF93D1F9D02A92E89B13 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CC2D87975F2C56DADE0DFD0E /* Assets.xcassets */; };
 		E954C35D4B585B7323603313 /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B06C1E5D20E82BEA60C6E94 /* NotificationManager.swift */; };
-		F1A2B3C4D5E6F7081234ABCD /* SessionListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F607182345BCDE /* SessionListView.swift */; };
+		F859E208C5DE828D8BF426F5 /* WeekStatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200D3C6692261A1E42C5A9AC /* WeekStatsView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		0B06C1E5D20E82BEA60C6E94 /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
 		1B8ECDC6DF4E72F09E4CD34E /* StatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsView.swift; sourceTree = "<group>"; };
+		200D3C6692261A1E42C5A9AC /* WeekStatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeekStatsView.swift; sourceTree = "<group>"; };
 		2874D1ED6977CA20D69237B3 /* SettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewModel.swift; sourceTree = "<group>"; };
+		2C9806132878CACB8D74C87F /* DayStatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayStatsView.swift; sourceTree = "<group>"; };
+		2CF98E6035EAD48D51E8FCAA /* SessionListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionListView.swift; sourceTree = "<group>"; };
 		4531B0F21B12D45BA1E2F5E7 /* StatisticsSketch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsSketch.swift; sourceTree = "<group>"; };
 		4AEBC78C3C4E5D7E9D47AED7 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		4CCE5C80CFDB30ED83DDCD60 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		4DEBD1327F5CBE4232081E26 /* Color+Hex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Hex.swift"; sourceTree = "<group>"; };
 		54FDCB4FF28C86B89470B06E /* NavigationSketch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationSketch.swift; sourceTree = "<group>"; };
-		59C3D3A514E1A62AC9D3B2F4 /* StudyLog2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = StudyLog2.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		59C3D3A514E1A62AC9D3B2F4 /* StudyLog2.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = StudyLog2.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6188B1D385DBC8B7CD0BDE71 /* StatsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsViewModel.swift; sourceTree = "<group>"; };
 		73F4CCB486521280AFF687C7 /* SettingsSketch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsSketch.swift; sourceTree = "<group>"; };
 		7B1BABFE5F32450F26088ED9 /* StudyLog2App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudyLog2App.swift; sourceTree = "<group>"; };
@@ -49,7 +55,7 @@
 		86E69175F271C133FE8CC97F /* DailyGoal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyGoal.swift; sourceTree = "<group>"; };
 		8EF0EAFC9D3778A372D78EB3 /* StudySession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudySession.swift; sourceTree = "<group>"; };
 		91956BE43C7463190D989A1A /* SampleData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleData.swift; sourceTree = "<group>"; };
-		A1B2C3D4E5F607182345BCDE /* SessionListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionListView.swift; sourceTree = "<group>"; };
+		A487EC21D4F813C3709D6F2C /* MonthStatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthStatsView.swift; sourceTree = "<group>"; };
 		A4A2AAF593A1A7DA18D9A3C0 /* SessionListSketch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionListSketch.swift; sourceTree = "<group>"; };
 		ADF02DB37B40DAD3D51FE1E0 /* StatsSummaryCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsSummaryCard.swift; sourceTree = "<group>"; };
 		B3439A225BD83424D9035FD9 /* HomeSketch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeSketch.swift; sourceTree = "<group>"; };
@@ -71,8 +77,11 @@
 		0FD3C8598EF8B838DDC62E46 /* Statistics */ = {
 			isa = PBXGroup;
 			children = (
+				2C9806132878CACB8D74C87F /* DayStatsView.swift */,
+				A487EC21D4F813C3709D6F2C /* MonthStatsView.swift */,
 				ADF02DB37B40DAD3D51FE1E0 /* StatsSummaryCard.swift */,
 				1B8ECDC6DF4E72F09E4CD34E /* StatsView.swift */,
+				200D3C6692261A1E42C5A9AC /* WeekStatsView.swift */,
 			);
 			path = Statistics;
 			sourceTree = "<group>";
@@ -91,7 +100,7 @@
 			isa = PBXGroup;
 			children = (
 				8BE2F6B00607006E6F23A198 /* Home */,
-				B2C3D4E5F6071823456CDEF0 /* Sessions */,
+				EE0B107D4CA98B2BA472D80C /* Sessions */,
 				5328F08D5683A351CDF60F2A /* Settings */,
 				E7C0C74B3A81BC00C4DF30F0 /* Sketches */,
 				0FD3C8598EF8B838DDC62E46 /* Statistics */,
@@ -166,14 +175,6 @@
 			path = StudyLog2;
 			sourceTree = "<group>";
 		};
-		B2C3D4E5F6071823456CDEF0 /* Sessions */ = {
-			isa = PBXGroup;
-			children = (
-				A1B2C3D4E5F607182345BCDE /* SessionListView.swift */,
-			);
-			path = Sessions;
-			sourceTree = "<group>";
-		};
 		E7C0C74B3A81BC00C4DF30F0 /* Sketches */ = {
 			isa = PBXGroup;
 			children = (
@@ -184,6 +185,14 @@
 				4531B0F21B12D45BA1E2F5E7 /* StatisticsSketch.swift */,
 			);
 			path = Sketches;
+			sourceTree = "<group>";
+		};
+		EE0B107D4CA98B2BA472D80C /* Sessions */ = {
+			isa = PBXGroup;
+			children = (
+				2CF98E6035EAD48D51E8FCAA /* SessionListView.swift */,
+			);
+			path = Sessions;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -215,6 +224,11 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
 				LastUpgradeCheck = 2630;
+				TargetAttributes = {
+					D7C60631F36646470B135E1B = {
+						DevelopmentTeam = "";
+					};
+				};
 			};
 			buildConfigurationList = FE24081A88EB74002C1DBFC0 /* Build configuration list for PBXProject "StudyLog2" */;
 			developmentRegion = en;
@@ -253,13 +267,15 @@
 			files = (
 				4E54CFE113F5AD40794FF1B5 /* Color+Hex.swift in Sources */,
 				BF6BB49FD06A78AA379F9F5D /* DailyGoal.swift in Sources */,
+				0D75C41FC77CA7F60461EE68 /* DayStatsView.swift in Sources */,
 				22C6DB62C08C2EC24F18EFD4 /* HomeSketch.swift in Sources */,
 				59713AFB69EDAE5EBAAA4E2A /* HomeView.swift in Sources */,
+				9356DA7C94721D154E87D76D /* MonthStatsView.swift in Sources */,
 				CF651E0C98A4F57234DA84D4 /* NavigationSketch.swift in Sources */,
 				E954C35D4B585B7323603313 /* NotificationManager.swift in Sources */,
 				C33B03C9AB43E7CC6CF83B99 /* SampleData.swift in Sources */,
-				F1A2B3C4D5E6F7081234ABCD /* SessionListView.swift in Sources */,
 				3B1D2C02D66F67A634519529 /* SessionListSketch.swift in Sources */,
+				8DC2202E2C25AD17D5CFF049 /* SessionListView.swift in Sources */,
 				5E660F31473053934ED6B7F5 /* SettingsSketch.swift in Sources */,
 				72139A0966C55C203271506A /* SettingsView.swift in Sources */,
 				A567441F5FE3BBACA7660133 /* SettingsViewModel.swift in Sources */,
@@ -273,6 +289,7 @@
 				C3F04F9A4B46772CBF56D229 /* SubjectEditView.swift in Sources */,
 				12F4A1377795864815E44A0C /* SubjectPickerView.swift in Sources */,
 				7BCFCB98BDA247AD45359F10 /* TimerViewModel.swift in Sources */,
+				F859E208C5DE828D8BF426F5 /* WeekStatsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -341,7 +358,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = JSQH88M3B7;
+				DEVELOPMENT_TEAM = "";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -430,7 +447,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = JSQH88M3B7;
+				DEVELOPMENT_TEAM = "";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
