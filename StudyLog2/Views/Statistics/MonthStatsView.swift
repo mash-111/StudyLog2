@@ -142,7 +142,6 @@ struct MonthStatsView: View {
         VStack(alignment: .leading, spacing: 12) {
             Text("週ごとの学習時間")
                 .font(.headline)
-                .padding(.horizontal)
 
             Chart(weeklyData) { item in
                 LineMark(
@@ -150,7 +149,7 @@ struct MonthStatsView: View {
                     y: .value("時間", item.totalMinutes)
                 )
                 .foregroundStyle(Color("AccentColor"))
-                .interpolationMethod(.catmullRom)
+                .interpolationMethod(.linear)
 
                 PointMark(
                     x: .value("週", item.weekLabel),
@@ -161,8 +160,10 @@ struct MonthStatsView: View {
             }
             .chartYAxisLabel("分")
             .frame(height: 200)
-            .padding(.horizontal)
         }
+        .padding()
+        .background(Color(.systemGray6))
+        .clipShape(RoundedRectangle(cornerRadius: 12))
     }
 
     // MARK: - サマリーカードセクション
@@ -212,7 +213,6 @@ struct MonthStatsView: View {
         VStack(alignment: .leading, spacing: 12) {
             Text("今月の科目別割合")
                 .font(.headline)
-                .padding(.horizontal)
 
             Chart(subjectData) { item in
                 SectorMark(
@@ -223,11 +223,13 @@ struct MonthStatsView: View {
                 .foregroundStyle(item.color)
             }
             .frame(height: 200)
-            .padding(.horizontal)
 
             // 凡例
             donutLegend
         }
+        .padding()
+        .background(Color(.systemGray6))
+        .clipShape(RoundedRectangle(cornerRadius: 12))
     }
 
     // MARK: - ドーナツグラフの凡例
@@ -258,7 +260,6 @@ struct MonthStatsView: View {
                 }
             }
         }
-        .padding(.horizontal)
     }
 
     // MARK: - ヘルパー

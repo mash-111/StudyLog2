@@ -11,7 +11,7 @@ struct StatsView: View {
 
     // MARK: - データ取得
     @Query private var sessions: [StudySession]
-    @Query private var subjects: [Subject]
+    @Query(sort: \Subject.createdAt) private var subjects: [Subject]
     @Query private var dailyGoals: [DailyGoal]
 
     // MARK: - 選択中の期間タブ
@@ -41,7 +41,8 @@ struct StatsView: View {
                         case .week:
                             WeekStatsView(
                                 sessions: sessions,
-                                subjects: subjects
+                                subjects: subjects,
+                                dailyGoals: dailyGoals
                             )
                         case .month:
                             MonthStatsView(
