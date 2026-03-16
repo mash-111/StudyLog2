@@ -15,7 +15,7 @@ final class Subject {
     /// 週間目標（分単位）
     var weeklyGoalMinutes: Int
     /// 作成日時（表示順のソートに使用）
-    var createdAt: Date
+    var createdAt: Date = Date()
 
     /// この科目に紐づく学習記録（カスケード削除）
     @Relationship(deleteRule: .cascade, inverse: \StudySession.subject)
