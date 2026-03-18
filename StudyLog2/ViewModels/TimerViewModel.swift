@@ -23,9 +23,24 @@ final class TimerViewModel {
 
     /// タイマー開始時刻（セッション保存用）
     private var startTime: Date?
+    /// バックグラウンド移行時刻（バックグラウンド経過時間の補正用）
+    private var backgroundEnteredTime: Date?
     /// Timer.publishのキャンセル用
     @ObservationIgnored
     private var timerCancellable: AnyCancellable?
+    /// バックグラウンド通知のオブザーバー保持用
+    @ObservationIgnored
+    private var backgroundObservers: [NSObjectProtocol] = []
+
+    // MARK: - 初期化・解放
+
+    init() {
+        setupBackgroundObservers()
+    }
+
+    deinit {
+        backgroundObservers.forEach { NotificationCenter.default.removeObserver($0) }
+    }
 
     // MARK: - フォーマット済み時間文字列
 
@@ -163,6 +178,49 @@ final class TimerViewModel {
             NotificationManager.shared.scheduleGoalAchievedNotification(goalMinutes: goal.targetMinutes)
             notifyGoalAchieved()
         }
+    }
+
+    // MARK: - バックグラウンド対応
+
+    /// バックグラウンド／フォアグラウンド移行の通知を登録する
+    private func setupBackgroundObservers() {
+        let resignObserver = NotificationCenter.default.addObserver(
+            forName: UIApplication.willResignActiveNotification,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            Task { @MainActor [weak self] in
+                self?.handleEnterBackground()
+            }
+        }
+
+        let activeObserver = NotificationCenter.default.addObserver(
+            forName: UIApplication.didBecomeActiveNotification,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            Task { @MainActor [weak self] in
+                self?.handleEnterForeground()
+            }
+        }
+
+        backgroundObservers = [resignObserver, activeObserver]
+    }
+
+    /// バックグラウンド移行時：移行時刻を記録してタイマーを停止する
+    private func handleEnterBackground() {
+        guard isRunning, !isPaused else { return }
+        backgroundEnteredTime = Date()
+        stopTimer()
+    }
+
+    /// フォアグラウンド復帰時：バックグラウンドにいた時間を経過秒数に加算してタイマーを再開する
+    private func handleEnterForeground() {
+        guard isRunning, !isPaused, let backgroundTime = backgroundEnteredTime else { return }
+        let elapsed = Int(Date().timeIntervalSince(backgroundTime))
+        elapsedSeconds += elapsed
+        backgroundEnteredTime = nil
+        startTimer()
     }
 
     // MARK: - プレビュー用ヘルパー
