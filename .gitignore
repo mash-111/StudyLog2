@@ -1,0 +1,13 @@
+# ビルド成果物
+.build/
+.build-main-test/
+
+# Claude Code
+.claude/
+
+# Xcode ユーザー設定
+*.xcuserstate
+xcuserdata/
+
+# macOS
+.DS_Store
