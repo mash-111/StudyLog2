@@ -47,7 +47,7 @@
 		4CCE5C80CFDB30ED83DDCD60 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		4DEBD1327F5CBE4232081E26 /* Color+Hex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Hex.swift"; sourceTree = "<group>"; };
 		54FDCB4FF28C86B89470B06E /* NavigationSketch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationSketch.swift; sourceTree = "<group>"; };
-		59C3D3A514E1A62AC9D3B2F4 /* StudyLog2.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = StudyLog2.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		59C3D3A514E1A62AC9D3B2F4 /* StudyLog2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = StudyLog2.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6188B1D385DBC8B7CD0BDE71 /* StatsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsViewModel.swift; sourceTree = "<group>"; };
 		73F4CCB486521280AFF687C7 /* SettingsSketch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsSketch.swift; sourceTree = "<group>"; };
 		7B1BABFE5F32450F26088ED9 /* StudyLog2App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudyLog2App.swift; sourceTree = "<group>"; };
@@ -224,11 +224,6 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
 				LastUpgradeCheck = 2630;
-				TargetAttributes = {
-					D7C60631F36646470B135E1B = {
-						DevelopmentTeam = "";
-					};
-				};
 			};
 			buildConfigurationList = FE24081A88EB74002C1DBFC0 /* Build configuration list for PBXProject "StudyLog2" */;
 			developmentRegion = en;
@@ -358,7 +353,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = JSQH88M3B7;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -447,7 +442,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = JSQH88M3B7;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
